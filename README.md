@@ -1,5 +1,6 @@
 
 # DashStack - Financial Accounting Standards Dashboard
+https://isdb-hackthon.vercel.app/
 
 DashStack is an AI-powered dashboard designed to simplify financial accounting standards compliance for Islamic financial institutions. The platform provides instant answers to FAS compliance questions, analyzes transactions, and ensures compliance with AAOIFI FAS standards.
 
