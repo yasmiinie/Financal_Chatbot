@@ -115,7 +115,7 @@ export function Header() {
               />
             </div>
             <div className="hidden sm:block">
-              <div className="font-medium text-text-primary dark:text-white"> ISSAM</div>
+              <div className="font-medium text-text-primary dark:text-white">CODEX</div>
               <div className="text-xs text-text-secondary dark:text-gray-400">Admin</div>
             </div>
           </button>

@@ -268,9 +268,7 @@ export function ChatMessages() {
 
   // Add the sample table message to the displayed messages for demonstration
   const displayMessages = [...messages]
-  if (messages.length > 0 && !messages.some((m) => m.id === "table-example")) {
-    displayMessages.push(sampleTableMessage as any)
-  }
+
 
   return (
     <div

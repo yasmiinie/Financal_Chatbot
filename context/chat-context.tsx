@@ -254,24 +254,27 @@ Would you like me to review any specific sections of this document in relation t
 Would you like me to provide specific examples or explain any particular aspect of ${fas} in more detail?`
       }
     } else if (selectedScenario === "Reverse transactions") {
-      response = `For reverse transactions, we need to analyze the journal entries to determine which standards apply. Based on your query, this appears to involve revenue recognition and potentially deferred payment arrangements.
-
-The accounting treatment would depend on:
-1. The nature of the underlying asset
-2. The structure of the transaction
-3. The terms of the agreement
-4. The transfer of risks and rewards
-
-Could you provide more details about the specific transaction you're analyzing?`
-    } else if (selectedScenario === "Standard enhancement") {
-      response = `Regarding potential enhancements to ${fas}, several areas could benefit from further clarification or expansion:
-
-1. Digital asset treatments and cryptocurrency considerations
-2. More detailed guidance on complex hybrid structures
-3. Standardized disclosure templates to improve comparability
-4. Implementation guidance for new market developments
-
-The AAOIFI is continuously working on updating standards to address emerging issues and market practices.`
+      try {
+        const apiResponse = await fetch("https://isdb-chatbot.onrender.com/process_fas", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "scenario": " Context: A financial institution enters into a forward purchase agreement with a farmer for the procurement of 100 tons of wheat. On the same day, it also enters a forward resale agreement with a separate client for the same type and quantity of wheat, intending to profit from the price difference. Both contracts involve advance payment and deferred delivery of the commodity. Adjustments: Advance purchase paid by the institution: $30,000 (paid in full at contract start) Quantity and Specification: 100 tons of wheat, Type X, Quality Y Purchase contract date: March 1, 2024 Delivery due from farmer: September 30, 2024 Resale contract initiated: March 1, 2024 Price received from client: $35,000 (paid in full) "
+          }),
+        });
+        
+        if (apiResponse.ok) {
+          const data = await apiResponse.json();
+          response = data.response;
+        } else {
+          response = "There was an error processing your request. Please try again later.";
+        }
+      } catch (error) {
+        console.error("Error calling API:", error);
+        response = "There was an error processing your request. Please try again later.";
+      }
     } else {
       response = `I understand you're asking about ${fas || "Islamic accounting standards"}. Could you please provide more context or specific questions about the application or interpretation you're interested in?`
     }
