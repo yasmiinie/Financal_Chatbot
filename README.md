@@ -1,30 +1,98 @@
-# ISDB hackthon
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+# DashStack - Financial Accounting Standards Dashboard
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/yahyaouimounir01-gmailcoms-projects/v0-isdb-hackthon)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/q6uOlUWQfWl)
+DashStack is an AI-powered dashboard designed to simplify financial accounting standards compliance for Islamic financial institutions. The platform provides instant answers to FAS compliance questions, analyzes transactions, and ensures compliance with AAOIFI FAS standards.
 
-## Overview
+## 📋 Table of Contents
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Routes](#routes)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+- [Development](#development)
+- [Authentication](#authentication)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Deployment
+## ✨ Features
 
-Your project is live at:
+- **AI-Powered Analysis**: Get instant answers to FAS compliance questions with our advanced AI assistant trained on AAOIFI standards
+- **Compliance Assurance**: Ensure financial transactions adhere to the latest AAOIFI FAS standards with real-time validation
+- **Instant Documentation**: Access comprehensive documentation and examples for all FAS standards
+- **Multi-language Support**: Toggle between English and Arabic interfaces
+- **Dark/Light Mode**: Choose between light and dark themes
+- **File Attachments**: Upload and analyze documents for compliance review
+- **Responsive Design**: Fully responsive interface that works on all devices
 
-**[https://vercel.com/yahyaouimounir01-gmailcoms-projects/v0-isdb-hackthon](https://vercel.com/yahyaouimounir01-gmailcoms-projects/v0-isdb-hackthon)**
+## 🛠️ Tech Stack
 
-## Build your app
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: React Context API
+- **Authentication**: Custom authentication system
+- **Deployment**: Vercel
 
-Continue building your app on:
+## 📁 Project Structure
 
-**[https://v0.dev/chat/projects/q6uOlUWQfWl](https://v0.dev/chat/projects/q6uOlUWQfWl)**
+```
+dashstack/
+├── app/                    # Next.js App Router
+│   ├── (auth)/             # Authentication routes (login, signup, etc.)
+│   ├── about/              # About page
+│   ├── chat/               # Chat dashboard
+│   ├── pricing/            # Pricing page
+│   ├── layout.tsx          # Root layout
+│   └── page.tsx            # Landing page
+├── components/             # Reusable components
+│   ├── chat-messages.tsx   # Chat messages component
+│   ├── file-attachments.tsx # File attachments component
+│   ├── header.tsx          # Header component
+│   ├── question-input.tsx  # Question input component
+│   ├── sidebar.tsx         # Sidebar component
+│   └── ui/                 # UI components
+├── context/                # React Context providers
+│   ├── chat-context.tsx    # Chat context
+│   ├── language-context.tsx # Language context
+│   ├── scenario-context.tsx # Scenario context
+│   └── theme-context.tsx   # Theme context
+├── public/                 # Static assets
+├── styles/                 # Global styles
+├── lib/                    # Utility functions
+├── types/                  # TypeScript type definitions
+├── next.config.js          # Next.js configuration
+├── tailwind.config.js      # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript configuration
+└── package.json            # Project dependencies
+```
 
-## How It Works
+## 🔄 Routes
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+| Route | Description | Authentication Required |
+|-------|-------------|------------------------|
+| `/` | Landing page | No |
+| `/login` | Login page | No |
+| `/signup` | Signup page | No |
+| `/forgot-password` | Password recovery | No |
+| `/about` | About page | No |
+| `/pricing` | Pricing plans | No |
+| `/chat` | Chat dashboard | Yes |
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.x or later
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/dashstack.git
+   cd dashstack
