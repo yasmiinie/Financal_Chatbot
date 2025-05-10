@@ -261,7 +261,7 @@ Would you like me to provide specific examples or explain any particular aspect 
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            "scenario": " Context: A financial institution enters into a forward purchase agreement with a farmer for the procurement of 100 tons of wheat. On the same day, it also enters a forward resale agreement with a separate client for the same type and quantity of wheat, intending to profit from the price difference. Both contracts involve advance payment and deferred delivery of the commodity. Adjustments: Advance purchase paid by the institution: $30,000 (paid in full at contract start) Quantity and Specification: 100 tons of wheat, Type X, Quality Y Purchase contract date: March 1, 2024 Delivery due from farmer: September 30, 2024 Resale contract initiated: March 1, 2024 Price received from client: $35,000 (paid in full) "
+            "scenario": userMessage
           }),
         });
         
