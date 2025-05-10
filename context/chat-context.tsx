@@ -223,35 +223,27 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
     // Generate different responses based on the scenario and FAS
     if (selectedScenario === "Use case scenarios") {
-      if (userMessage.toLowerCase().includes("example") || userMessage.toLowerCase().includes("case")) {
-        response = `Here's an example of how ${fas} is applied in practice:
-
-A financial institution enters into an Ijarah agreement to lease equipment to a customer for 5 years. The cost of the equipment is $100,000 with an estimated useful life of 10 years and no residual value.
-
-Accounting treatment:
-1. The lessor recognizes the leased asset at cost ($100,000)
-2. Depreciation is calculated over the useful life (10 years), not the lease term
-3. Annual depreciation expense: $10,000
-4. Rental income is recognized on a straight-line basis over the lease term`
-      } else if (userMessage.toLowerCase().includes("difference") || userMessage.toLowerCase().includes("compare")) {
-        response = `When comparing different standards, ${fas} has specific requirements that differ from conventional accounting standards. The key differences include:
-
-1. Recognition criteria for the underlying assets
-2. Treatment of lease payments and income
-3. Disclosure requirements specific to Islamic financial transactions
-4. Handling of ownership transfer arrangements`
-      } else if (
-        userMessage.toLowerCase().includes("file") ||
-        userMessage.toLowerCase().includes("attachment") ||
-        userMessage.toLowerCase().includes("document")
-      ) {
-        response = `Thank you for sharing this document. Based on the ${fas} guidelines, I can see this is a standard Ijarah contract template. The maintenance clause in section 7 aligns with the standard's requirements for lessor responsibilities.
-
-Would you like me to review any specific sections of this document in relation to ${fas} requirements?`
-      } else {
-        response = `According to ${fas}, Islamic financial institutions must follow specific guidelines for recognition, measurement, and disclosure. The standard emphasizes the importance of Shariah compliance while maintaining transparency in financial reporting.
-
-Would you like me to provide specific examples or explain any particular aspect of ${fas} in more detail?`
+      try {
+        const apiResponse = await fetch("http://localhost:8000/ask/ ", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "query": userMessage,
+            "transaction_type": "loan"
+          }),
+        });
+        
+        if (apiResponse.ok) {
+          const data = await apiResponse.json();
+          response = data.answer || "I'm sorry, I couldn't find a specific answer to your question.";
+        } else {
+          response = "There was an error processing your request. Please try again later.";
+        }
+      } catch (error) {
+        console.error("Error calling API:", error);
+        response = "There was an error processing your request. Please try again later.";
       }
     } else if (selectedScenario === "Reverse transactions") {
       try {
@@ -275,7 +267,140 @@ Would you like me to provide specific examples or explain any particular aspect 
         console.error("Error calling API:", error);
         response = "There was an error processing your request. Please try again later.";
       }
-    } else {
+    } else if (selectedScenario === "Standard enhancement") {
+      try {
+        // First API call to start processing
+        const initialResponse = await fetch("http://localhost:8000/api/process", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "standard_text": userMessage,
+            "enhancement_focus": "digital assets",
+            "standard_id": fas || "AAOIFI-17"
+          }),
+        });
+        
+        if (initialResponse.ok) {
+          const initialData = await initialResponse.json();
+          const taskId = initialData.task_id;
+          
+          // Simulating a waiting period to allow processing
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          // Second API call to get results
+          const resultResponse = await fetch(`http://localhost:8000/api/task/${taskId}`);
+          
+          if (resultResponse.ok) {
+            const resultData = await resultResponse.json();
+            
+            // Format the response based on the API result
+            if (resultData.status === "completed") {
+              response = `Standard Enhancement Analysis for ${resultData.results.standard_id}:\n\n` +
+                         `Review: ${resultData.results.review}\n\n` +
+                         `Recommended Enhancements: ${resultData.results.enhancements}`;
+            } else {
+              response = `Your enhancement request is still being processed (Task ID: ${taskId}). Please check back later for results.`;
+            }
+          } else {
+            response = "There was an error retrieving the results. Please try again later.";
+          }
+        } else {
+          response = "There was an error processing your enhancement request. Please try again later.";
+        }
+      } catch (error) {
+        console.error("Error calling API:", error);
+        response = "There was an error processing your request. Please try again later.";
+      }
+    } else if (selectedScenario === "Teams own") {
+      try {
+        // Determine appropriate parameters based on user message
+        let productType = "Murabaha"; // Default
+        
+        // Basic text analysis to determine product type
+        if (userMessage.toLowerCase().includes("murabaha")) {
+          productType = "Murabaha";
+        } else if (userMessage.toLowerCase().includes("ijarah")) {
+          productType = "Ijarah";
+        } else if (userMessage.toLowerCase().includes("musharaka")) {
+          productType = "Musharaka";
+        } else if (userMessage.toLowerCase().includes("sukuk")) {
+          productType = "Sukuk";
+        }
+        
+        // Simple detection for countries mentioned
+        const countries = [];
+        if (userMessage.toLowerCase().includes("uae") || userMessage.toLowerCase().includes("emirates")) {
+          countries.push("UAE");
+        }
+        if (userMessage.toLowerCase().includes("saudi") || userMessage.toLowerCase().includes("ksa")) {
+          countries.push("Saudi Arabia");
+        }
+        if (countries.length === 0) {
+          countries.push("UAE", "Saudi Arabia"); // Default if none specified
+        }
+        
+        const apiResponse = await fetch("http://localhost:8001/api/compliance/analyze", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "query_text": userMessage,
+            "product_type": productType,
+            "fiqh_schools": ["Hanbali"],
+            "regulatory_frameworks": ["SAMA"],
+            "cross_border_factors": countries
+          }),
+        });
+        
+        if (apiResponse.ok) {
+          const data = await apiResponse.json();
+          
+          // Format the response based on the API result
+          response = `## Compliance Analysis: ${data.product_type}\n\n` +
+                     `**Analysis:** ${data.analysis}\n\n` +
+                     `**Compliance Status:** ${data.compliance_status.summary}\n\n` +
+                     `**Recommendations:**\n`;
+                     
+          // Add recommendations as bullet points
+         // Add recommendations section
+response += `\n**Recommendations:**\n`;
+
+// Safely handle recommendations in different formats
+if (data.recommendations) {
+  if (Array.isArray(data.recommendations)) {
+    // It's an array, iterate through it
+    for (let i = 0; i < data.recommendations.length; i++) {
+      response += `${i + 1}. ${data.recommendations[i]}\n`;
+    }
+  } else if (typeof data.recommendations === 'string') {
+    // It's a string, add as single recommendation
+    response += `- ${data.recommendations}\n`;
+  } else {
+    // It's some other format
+    response += `- ${JSON.stringify(data.recommendations)}\n`;
+  }
+} else {
+  // No recommendations provided
+  response += "No specific recommendations provided.\n";
+}
+          // Add jurisdiction-specific details if available
+          if (data.compliance_status.details) {
+            response += `\n**Jurisdictional Details:**\n`;
+            for (const [country, detail] of Object.entries(data.compliance_status.details)) {
+              response += `- **${country}:** ${detail}\n`;
+            }
+          }
+        } else {
+          response = "There was an error analyzing the compliance of this structure. Please try again later.";
+        }
+      } catch (error) {
+        console.error("Error calling API:", error);
+        response = "There was an error processing your request. Please try again later.";
+      }
+    }else {
       response = `I understand you're asking about ${fas || "Islamic accounting standards"}. Could you please provide more context or specific questions about the application or interpretation you're interested in?`
     }
 
